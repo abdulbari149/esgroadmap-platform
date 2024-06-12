@@ -340,6 +340,68 @@ const TargetSentence = {
   id: 'ID',
 } as const
 
+
+// id                                                String  @id @default("") @db.VarChar(11)
+// Company                                           String? @db.MediumText
+// emails                                            String? @db.MediumText
+// full_text                                         String? @db.MediumText
+// Source_link                                       String? @map("Source link") @db.MediumText
+// pr_site                                           String? @db.MediumText
+// release_date                                      String? @db.MediumText
+// source                                            String? @db.MediumText
+// ticker                                            String? @db.MediumText
+// title                                             String? @db.MediumText
+// ArticleTargetYear                                 String? @db.MediumText
+// PressReleaseFullCleanstep1                        String? @db.MediumText
+// PressReleaseFullClean                             String? @db.MediumText
+// Source_Date                                       String? @map("Source Date") @db.MediumText
+// Annual_Report_Date                                String? @map("Annual Report Date") @db.MediumText
+// PressReleaseYear                                  String? @db.MediumText
+// PressReleaseMonth                                 String? @db.MediumText
+// Target_sentence                                   String? @map("Target sentence") @db.MediumText
+// SentenceTargetYear                                String? @db.MediumText
+// Targetyear_s_                                     String? @map("Targetyear(s)") @db.MediumText
+// sentence_carbon                                   String? @map("sentence-carbon") @db.VarChar(20)
+// sentence_gender                                   String? @map("sentence-gender") @db.VarChar(20)
+// sentence_renewables                               String? @map("sentence-renewables") @db.VarChar(20)
+// sentence_suppliers                                String? @map("sentence-suppliers") @db.VarChar(20)
+// sentence_water                                    String? @map("sentence-water") @db.VarChar(20)
+// sentence_waste                                    String? @map("sentence-waste") @db.VarChar(20)
+// sentence_other                                    String? @map("sentence-other") @db.VarChar(20)
+// Member_of_the_S_P500                              String? @map("Member of the S&P500") @db.VarChar(255)
+// Member_of_the_Russell_1000_Index                  String? @map("Member of the Russell 1000 Index") @db.VarChar(255)
+// Ticker_s_                                         String? @map("Ticker(s)") @db.VarChar(255)
+// PR_Agency                                         String? @map("PR Agency") @db.VarChar(255)
+// Company_global_main_press___news_release_site_URL String? @map("Company global/main press - news release site URL") @db.MediumText
+// Company_annual_reports_page_URL                   String? @map("Company annual reports page URL") @db.MediumText
+// Company_sustainability___ESG_reports_page_URL     String? @map("Company sustainability / ESG reports page URL") @db.MediumText
+// Country                                           String? @db.VarChar(255)
+// sector_code__1__NAICS_                            String? @map("sector code #1 (NAICS)") @db.VarChar(10)
+// sector_name__1__NAICS_                            String? @map("sector name #1 (NAICS)") @db.VarChar(255)
+// sector_code__2__NAICS_                            String? @map("sector code #2 (NAICS)") @db.VarChar(10)
+// sector_name__2__NAICS_                            String? @map("sector name #2 (NAICS)") @db.VarChar(255)
+// sector_code__3__NAICS_                            String? @map("sector code #3 (NAICS)") @db.VarChar(10)
+// sector_name__3__NAICS_                            String? @map("sector name #3 (NAICS)") @db.VarChar(255)
+// sector_code__4__NAICS_                            String? @map("sector code #4 (NAICS)") @db.VarChar(10)
+// sector_name__4__NAICS_                            String? @map("sector name #4 (NAICS)") @db.VarChar(255)
+// sector_code__5__NAICS_                            String? @map("sector code #5 (NAICS)") @db.VarChar(10)
+// sector_name__5__NAICS_                            String? @map("sector name #5 (NAICS)") @db.VarChar(255)
+// upload_date                                       String? @map("upload-date") @db.MediumText
+
+
+const TargetSentenceView = {
+  id: "ID",
+  Company: "Company",
+  Source_link: "DocURL",
+  Target_sentence: "Target Sentence",
+  SentenceTargetYear: "Target Year(s)",
+  Country: "Country",
+  sector_code__1__NAICS_: "sector code #1 (NAICS)",
+  sector_name__1__NAICS_: "sector name #1 (NAICS)",
+  upload_date: "Upload Date",
+} as const
+
+
 const columns = {
   CompanyUniverse,
   Percentage,
@@ -349,6 +411,7 @@ const columns = {
   CompanyData2,
   CompanyData,
   TargetSentence,
+  TargetSentenceView,
 }
 
 export default columns

@@ -1,5 +1,10 @@
 "use client";
-import { Sidebar as ReactSidebar, Menu, MenuItem } from "react-pro-sidebar";
+import {
+	Sidebar as ReactSidebar,
+	Menu,
+	MenuItem,
+	SubMenu,
+} from "react-pro-sidebar";
 
 import Link from "next/link";
 
@@ -13,13 +18,32 @@ import {
 	TargetIcon,
 	CableCarIcon,
 	CombineIcon,
+	PenToolIcon,
+	AlarmSmokeIcon,
+	Building2Icon,
+	BiohazardIcon,
+	RecycleIcon,
+	ContainerIcon,
+	RibbonIcon,
+	AtomIcon,
 } from "lucide-react";
-import { useState } from "react";
-import { usePathname } from "next/navigation";
+import React, { useState } from "react";
+import { redirect, usePathname } from "next/navigation";
 import Logo from "./logo";
 import Colors from "@/styles/colors";
 
-const sideBarNavigation = [
+type SidebarItemWithoutSubMenu = {
+	id: number;
+	name: string;
+	icon: any;
+	link: string;
+};
+
+type SidebarItem = SidebarItemWithoutSubMenu & {
+	submenus?: SidebarItemWithoutSubMenu[];
+};
+
+const sideBarNavigation: SidebarItem[] = [
 	{
 		id: 1,
 		name: "Dashboard",
@@ -28,39 +52,53 @@ const sideBarNavigation = [
 	},
 	{
 		id: 2,
-		name: "Percentages",
-		icon: Percent,
-		link: "/dashboard/percentages",
-	},
-	{
-		id: 3,
-		name: "Company Universe",
-		icon: Building2,
-		link: "/dashboard/company-universe",
-	},
-	{
-		id: 4,
-		name: "Unique Factors",
-		icon: ScrollText,
-		link: "/dashboard/unique-factors",
-	},
-	{
-		id: 5,
-		name: "Target Sentences",
+		name: "Targets & Tools",
 		icon: TargetIcon,
-		link: "/dashboard/target-sentences",
-	},
-	{
-		id: 6,
-		name: "Sentence All",
-		icon: CombineIcon,
-		link: "/dashboard/sentence-all",
-	},
-	{
-		id: 6,
-		name: "Roadmap Carbon",
-		icon: CableCarIcon,
-		link: "/dashboard/roadmap-carbon",
+		link: "/dashboard/targets/",
+		submenus: [
+			{
+				id: 1,
+				name: "Carbon Reduction",
+				link: "/dashboard/targets/carbon-reduction",
+				icon: BiohazardIcon,
+			},
+			// {
+			// 	id: 2,
+			// 	name: "All Company",
+			// 	link: "/dashboard/targets/company",
+			// 	icon: Building2Icon,
+			// },
+			{
+				id: 3,
+				name: "Waste & Recycling",
+				link: "/dashboard/targets/waste-&-recycling",
+				icon: RecycleIcon,
+			},
+			{
+				id: 4,
+				name: "Water Management",
+				link: "/dashboard/targets/water-management",
+				icon: CableCarIcon,
+			},
+			{
+				id: 5,
+				name: "Supply Chain",
+				link: "/dashboard/targets/supply-chain",
+				icon: ContainerIcon,
+			},
+			{
+				id: 6,
+				name: "Gender Diversity",
+				link: "/dashboard/targets/gender-diversity",
+				icon: RibbonIcon,
+			},
+			{
+				id: 7,
+				name: "Renewables",
+				link: "/dashboard/targets/renewables",
+				icon: AtomIcon,
+			},
+		],
 	},
 ];
 
@@ -99,6 +137,45 @@ const Sidebar = () => {
 						color: isActive ? Colors.white : Colors.black,
 						backgroundColor: isActive ? Colors.secondary : "transparent",
 					};
+
+					if (!collapsed && nav.submenus && nav.submenus.length > 0) {
+						return (
+							<SubMenu
+								active={isActive}
+								icon={<Icon size={20} color={styles.color} />}
+								key={nav.id}
+								label={nav.name}
+								style={styles}
+								component={<Link href={nav.submenus?.[0].link} />}
+								open={pathname.startsWith(nav.link)}
+							>
+								{nav.submenus.map((submenu) => {
+									const isSubmenuActive = submenu.link === pathname;
+									const SubMenuIcon = submenu.icon;
+									const submenuStyles = {
+										color: isSubmenuActive ? Colors.white : Colors.black,
+										backgroundColor: isSubmenuActive
+											? Colors.secondary
+											: "transparent",
+									};
+
+									return (
+										<MenuItem
+											key={submenu.id}
+											component={<Link href={submenu.link} />}
+											active={isSubmenuActive}
+											icon={
+												<SubMenuIcon size={20} color={submenuStyles.color} />
+											}
+											style={submenuStyles}
+										>
+											{submenu.name}
+										</MenuItem>
+									);
+								})}
+							</SubMenu>
+						);
+					}
 					return (
 						<MenuItem
 							key={nav.id}
