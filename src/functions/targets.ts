@@ -14,7 +14,7 @@ const getSentenceCarbonData = async () => {
     select: {
       id: true,
       Company: true,
-      Source_link: true,
+      DocURL: true,
       Target_sentence: true,
       SentenceTargetYear: true,
       Country: true,
@@ -40,7 +40,7 @@ const getSentenceGenderData = async () => {
     select: {
       id: true,
       Company: true,
-      Source_link: true,
+      DocURL: true,
       Target_sentence: true,
       SentenceTargetYear: true,
       Country: true,
@@ -66,7 +66,7 @@ const getSentenceWaterData = async () => {
     select: {
       id: true,
       Company: true,
-      Source_link: true,
+      DocURL: true,
       Target_sentence: true,
       SentenceTargetYear: true,
       Country: true,
@@ -92,7 +92,7 @@ const getSentenceWasteData = async () => {
     select: {
       id: true,
       Company: true,
-      Source_link: true,
+      DocURL: true,
       Target_sentence: true,
       SentenceTargetYear: true,
       Country: true,
@@ -118,7 +118,7 @@ const getSentenceSupplierData = async () => {
     select: {
       id: true,
       Company: true,
-      Source_link: true,
+      DocURL: true,
       Target_sentence: true,
       SentenceTargetYear: true,
       Country: true,
@@ -144,7 +144,7 @@ const getSentenceRenewablesData = async () => {
     select: {
       id: true,
       Company: true,
-      Source_link: true,
+      DocURL: true,
       Target_sentence: true,
       SentenceTargetYear: true,
       Country: true,

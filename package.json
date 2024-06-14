@@ -14,7 +14,10 @@
     "@mui/icons-material": "^5.15.18",
     "@mui/material": "^5.15.18",
     "@prisma/client": "5.14.0",
+    "file-saver": "^2.0.5",
     "i": "^0.3.7",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
     "lucide-react": "^0.378.0",
     "next": "14.2.3",
     "npm": "^10.8.0",
@@ -23,9 +26,11 @@
     "prisma": "^5.14.0",
     "react": "^18",
     "react-dom": "^18",
-    "react-pro-sidebar": "^1.1.0"
+    "react-pro-sidebar": "^1.1.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@types/jspdf": "^2.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

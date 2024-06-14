@@ -392,9 +392,9 @@ const TargetSentence = {
 const TargetSentenceView = {
   id: "ID",
   Company: "Company",
-  Source_link: "DocURL",
   Target_sentence: "Target Sentence",
   SentenceTargetYear: "Target Year(s)",
+  DocURL: "DocURL",
   Country: "Country",
   sector_code__1__NAICS_: "sector code #1 (NAICS)",
   sector_name__1__NAICS_: "sector name #1 (NAICS)",
