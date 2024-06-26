@@ -57,7 +57,7 @@ const Table = ({ data }: Props) => {
 			});
 	}, [data]);
 
-	return <DataTable<SentenceAllData> data={data} columns={columns} />;
+	return <DataTable<SentenceAllData> title='Sentence All' data={data} columns={columns} />;
 };
 
 export default Table;

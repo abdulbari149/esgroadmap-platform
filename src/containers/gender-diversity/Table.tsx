@@ -6,6 +6,7 @@ import React from "react";
 import useTargetTable from "@/hooks/use-target-table";
 import { Dialog } from "primereact/dialog";
 import TargetSentenceModal from "@/components/target-sentence-modal";
+import { FilterMatchMode } from "primereact/api";
 
 type Props = {
 	data: SentenceGenderData[];
@@ -17,11 +18,17 @@ const Table = ({ data }: Props) => {
 		showTargetModel,
 		setShowTargetModal,
 		selectedTargetSentence,
+		filters
 	} = useTargetTable(data);
 
 	return (
 		<>
-			<DataTable<SentenceGenderData> data={data} columns={columns} />
+			<DataTable<SentenceGenderData>
+				title="Gender Diversity"
+				data={data}
+				columns={columns}
+				filters={filters}
+			/>
 			<TargetSentenceModal
 				setShowTargetModal={setShowTargetModal}
 				targetSentence={selectedTargetSentence}

@@ -57,7 +57,7 @@ const Table = ({ data }: Props) => {
       })
   }, [data])
 
-  return <DataTable<PercentageData> data={data} columns={columns} />
+  return <DataTable<PercentageData> title='' data={data} columns={columns} />
 }
 
 export default Table

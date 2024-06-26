@@ -16,10 +16,13 @@ const Table = ({ data }: Props) => {
 		selectedTargetSentence,
 		setShowTargetModal,
 		showTargetModel,
+		filters
 	} = useTargetTable(data);
 	return (
 		<>
-			<DataTable<RoadmapCarbonData> data={data} columns={columns} />
+			<DataTable<RoadmapCarbonData>
+				title="Roadmap Carbon"
+			data={data} columns={columns} filters={filters} />
 			<TargetSentenceModal
 				setShowTargetModal={setShowTargetModal}
 				targetSentence={selectedTargetSentence}

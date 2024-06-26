@@ -5,10 +5,10 @@ import { getSentenceWasteData } from "@/functions/targets";
 const WasteAndRecycling = async () => {
 	const data = await getSentenceWasteData();
 	return (
-		<TableLayout title="Waste & Recycling">
+		<div className="w-full py-10 px-10 overflow-x-hidden">
 			<Table data={data} />
-		</TableLayout>
-	);
+		</div>
+	)
 };
 
 export default WasteAndRecycling;

@@ -5,11 +5,22 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { FilterMatchMode } from "primereact/api";
 
 const useTargetTable = <T extends object>(data: Array<T>) => {
 	const [showModal, setShowModal] = useState(false);
 	const [selectedTargetSentence, setSelectedTargetSentence] = useState("");
 
+	const filters = {
+		ID: FilterMatchMode.CONTAINS,
+		Company: FilterMatchMode.CONTAINS,
+		"Target Sentence": FilterMatchMode.CONTAINS,
+		"Target Year(s)": FilterMatchMode.CONTAINS,
+		Country: FilterMatchMode.CONTAINS,
+		"sector code #1 (NAICS)": FilterMatchMode.CONTAINS,
+		"sector name #1 (NAICS)": FilterMatchMode.CONTAINS,
+		"Upload Date": FilterMatchMode.CONTAINS,
+	};
 	const columns = useMemo(() => {
 		if (data.length === 0) return [];
 
@@ -17,7 +28,7 @@ const useTargetTable = <T extends object>(data: Array<T>) => {
 			const hasEnoughSpaces = key.split(" ").length > 4;
 
 			let width =
-				calculateWidthBasedOnWordLength(key, hasEnoughSpaces ? 2 : 1) + 20;
+				calculateWidthBasedOnWordLength(key, hasEnoughSpaces ? 2 : 1) + 40;
 
 			let limit = 10000;
 
@@ -87,18 +98,25 @@ const useTargetTable = <T extends object>(data: Array<T>) => {
 				},
 				headerStyle: { paddingLeft: 0, paddingRight: 0 },
 				bodyStyle: { paddingLeft: 0, paddingRight: 0 },
-				headerClassName: "text-[14px] px-2 text-center py-2 font-semibold",
+				headerClassName: "text-[14px] text-center items-center py-2 font-semibold",
 				bodyClassName: "text-[14px] px-2 py-2 text-center",
 				sortable: true,
+				filter: key in filters,
+				filterHeaderStyle: key in filters ? {
+					minWidth: width + 100,
+				} : {},
+				showFilterMenuOptions: false,
 			} as React.ComponentProps<typeof Column>;
 		});
 	}, [data]);
+
 
 	return {
 		columns,
 		showTargetModel: showModal,
 		setShowTargetModal: setShowModal,
 		selectedTargetSentence,
+		filters,
 	};
 };
 

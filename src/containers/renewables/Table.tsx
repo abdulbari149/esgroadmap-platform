@@ -16,11 +16,17 @@ const Table = ({ data }: Props) => {
 		selectedTargetSentence,
 		setShowTargetModal,
 		showTargetModel,
+		filters,
 	} = useTargetTable(data);
 
 	return (
 		<>
-			<DataTable<SentenceRenewableData> data={data} columns={columns} />
+			<DataTable<SentenceRenewableData>
+				title='Renewables'
+				data={data}
+				columns={columns}
+				filters={filters}
+			/>
 			<TargetSentenceModal
 				setShowTargetModal={setShowTargetModal}
 				targetSentence={selectedTargetSentence}

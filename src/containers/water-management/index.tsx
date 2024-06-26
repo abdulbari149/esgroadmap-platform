@@ -1,13 +1,12 @@
 import Table from "./Table";
-import TableLayout from "../table-layout";
 import { getSentenceWaterData } from "@/functions/targets";
 
 const WaterManagement = async () => {
 	const data = await getSentenceWaterData();
 	return (
-		<TableLayout title="Water Management">
+		<div className="w-full py-10 px-10 overflow-x-hidden">
 			<Table data={data} />
-		</TableLayout>
+		</div>
 	);
 };
 

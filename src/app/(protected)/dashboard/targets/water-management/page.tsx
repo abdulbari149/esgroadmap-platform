@@ -1,4 +1,4 @@
-import WasteAndRecycling from "@/containers/waste-&-recycling";
+import WaterManagement from "@/containers/water-management";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,6 +8,6 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-const Page = () => <WasteAndRecycling />;
+const Page = () => <WaterManagement />;
 
 export default Page;

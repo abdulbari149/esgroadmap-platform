@@ -3,11 +3,11 @@ import TableLayout from "../table-layout";
 import { getRoadmapCarbonData } from "@/functions/roadmap-carbon";
 
 const RoadmapCarbon = async () => {
-	const roadmapCarbon = await getRoadmapCarbonData();
+	const data = await getRoadmapCarbonData();
 	return (
-		<TableLayout title="Roadmap Carbon Table">
-			<Table data={roadmapCarbon} />
-		</TableLayout>
+		<div className="w-full py-10 px-10 overflow-x-hidden">
+			<Table data={data} />
+		</div>
 	);
 };
 
