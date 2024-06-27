@@ -1,4 +1,5 @@
-import SupplyChain from "@/containers/supply-chain";
+import TargetTable from "@/containers/target-table";
+import { getSentenceSupplierData } from "@/functions/targets";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,6 +9,9 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-const Page = () => <SupplyChain />;
+const Page = async () => {
+	const data = await getSentenceSupplierData();
+	return <TargetTable title="Supply Chain" data={data} />;
+};
 
 export default Page;

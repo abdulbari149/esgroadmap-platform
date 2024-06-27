@@ -2,25 +2,24 @@ import calculateWidthBasedOnWordLength from "@/utils/calculate-width";
 import { useMemo, useState } from "react";
 import dbColumns from "@/constants/columns";
 import { Column } from "primereact/column";
-import { Button } from "primereact/button";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FilterMatchMode } from "primereact/api";
+
+const filters = {
+	ID: FilterMatchMode.CONTAINS,
+	Company: FilterMatchMode.CONTAINS,
+	"Target Sentence": FilterMatchMode.CONTAINS,
+	"Target Year(s)": FilterMatchMode.CONTAINS,
+	Country: FilterMatchMode.CONTAINS,
+	"sector code #1 (NAICS)": FilterMatchMode.CONTAINS,
+	"sector name #1 (NAICS)": FilterMatchMode.CONTAINS,
+	"Upload Date": FilterMatchMode.CONTAINS,
+};
 
 const useTargetTable = <T extends object>(data: Array<T>) => {
 	const [showModal, setShowModal] = useState(false);
 	const [selectedTargetSentence, setSelectedTargetSentence] = useState("");
 
-	const filters = {
-		ID: FilterMatchMode.CONTAINS,
-		Company: FilterMatchMode.CONTAINS,
-		"Target Sentence": FilterMatchMode.CONTAINS,
-		"Target Year(s)": FilterMatchMode.CONTAINS,
-		Country: FilterMatchMode.CONTAINS,
-		"sector code #1 (NAICS)": FilterMatchMode.CONTAINS,
-		"sector name #1 (NAICS)": FilterMatchMode.CONTAINS,
-		"Upload Date": FilterMatchMode.CONTAINS,
-	};
 	const columns = useMemo(() => {
 		if (data.length === 0) return [];
 
@@ -88,7 +87,7 @@ const useTargetTable = <T extends object>(data: Array<T>) => {
 						return <span>{value.toLocaleDateString()}</span>;
 					}
 
-					value = value.trim();
+					// value = value?.trim();
 
 					return (
 						<span>
@@ -98,18 +97,21 @@ const useTargetTable = <T extends object>(data: Array<T>) => {
 				},
 				headerStyle: { paddingLeft: 0, paddingRight: 0 },
 				bodyStyle: { paddingLeft: 0, paddingRight: 0 },
-				headerClassName: "text-[14px] text-center items-center py-2 font-semibold",
+				headerClassName:
+					"text-[14px] text-center items-center py-2 font-semibold",
 				bodyClassName: "text-[14px] px-2 py-2 text-center",
 				sortable: true,
 				filter: key in filters,
-				filterHeaderStyle: key in filters ? {
-					minWidth: width + 100,
-				} : {},
+				filterHeaderStyle:
+					key in filters
+						? {
+								minWidth: width + 100,
+						  }
+						: {},
 				showFilterMenuOptions: false,
 			} as React.ComponentProps<typeof Column>;
 		});
 	}, [data]);
-
 
 	return {
 		columns,

@@ -1,4 +1,5 @@
-import CarbonReduction from "@/containers/carbon-reduction";
+import TargetTable from "@/containers/target-table";
+import { getSentenceCarbonData } from "@/functions/targets";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,6 +9,10 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-const Page = () => <CarbonReduction />;
+const Page = async () => {
+	const data = await getSentenceCarbonData();
+
+	return <TargetTable title="Carbon Reduction" data={data} />;
+};
 
 export default Page;

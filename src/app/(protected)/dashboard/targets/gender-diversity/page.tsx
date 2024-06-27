@@ -1,4 +1,5 @@
-import GenderDiversity from "@/containers/gender-diversity";
+import TargetTable from "@/containers/target-table";
+import { getSentenceGenderData } from "@/functions/targets";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,6 +9,10 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-const Page = () => <GenderDiversity />;
+const Page = async () => {
+	const data = await getSentenceGenderData();
+
+	return <TargetTable title="Gender Diversity" data={data} />;
+};
 
 export default Page;
