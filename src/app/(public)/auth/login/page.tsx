@@ -1,5 +1,5 @@
-const Page = async () => {
-	return <div></div>;
-};
+import Login from "@/containers/login";
+
+const Page = () => <Login />;
 
 export default Page;

@@ -4,16 +4,56 @@ import dbColumns from "@/constants/columns";
 import { Column } from "primereact/column";
 import Link from "next/link";
 import { FilterMatchMode } from "primereact/api";
+import { MultiSelect } from "primereact/multiselect";
+import columns from "@/constants/columns";
 
 const filters = {
 	ID: FilterMatchMode.CONTAINS,
 	Company: FilterMatchMode.CONTAINS,
 	"Target Sentence": FilterMatchMode.CONTAINS,
 	"Target Year(s)": FilterMatchMode.CONTAINS,
-	Country: FilterMatchMode.CONTAINS,
+	Country: FilterMatchMode.IN,
 	"sector code #1 (NAICS)": FilterMatchMode.CONTAINS,
 	"sector name #1 (NAICS)": FilterMatchMode.CONTAINS,
 	"Upload Date": FilterMatchMode.CONTAINS,
+};
+const representatives = [
+	{ name: "Amy Elsner", image: "amyelsner.png" },
+	{ name: "Anna Fali", image: "annafali.png" },
+	{ name: "Asiya Javayant", image: "asiyajavayant.png" },
+	{ name: "Bernardo Dominic", image: "bernardodominic.png" },
+	{ name: "Elwin Sharvill", image: "elwinsharvill.png" },
+	{ name: "Ioni Bowcher", image: "ionibowcher.png" },
+	{ name: "Ivan Magalhaes", image: "ivanmagalhaes.png" },
+	{ name: "Onyama Limba", image: "onyamalimba.png" },
+	{ name: "Stephen Shaw", image: "stephenshaw.png" },
+	{ name: "XuXue Feng", image: "xuxuefeng.png" },
+];
+
+const representativesItemTemplate = (option: any) => {
+	return (
+		<div className="flex align-items-center gap-2">
+			<span>{option.name}</span>
+		</div>
+	);
+};
+
+const representativeFilterTemplate = (options: any) => {
+	return (
+		<MultiSelect
+			value={options.value}
+			options={representatives}
+			itemTemplate={representativesItemTemplate}
+			onChange={(e) => options.filterCallback(e.value)}
+			optionLabel="name"
+			placeholder="Any"
+			className="p-column-filter"
+		/>
+	);
+};
+
+const columnFilterElements = {
+	[columns.TargetSentenceView.Country]: representativeFilterTemplate,
 };
 
 const useTargetTable = <T extends object>(data: Array<T>) => {
@@ -36,7 +76,7 @@ const useTargetTable = <T extends object>(data: Array<T>) => {
 				width += 200;
 			}
 
-			return {
+			const options = {
 				header: () => {
 					return (
 						<div
@@ -109,7 +149,18 @@ const useTargetTable = <T extends object>(data: Array<T>) => {
 						  }
 						: {},
 				showFilterMenuOptions: false,
+				showFilterMenu: false,
 			} as React.ComponentProps<typeof Column>;
+
+			if (
+				key in filters &&
+				filters[key as keyof typeof filters] === FilterMatchMode.IN
+			) {
+				options.filterElement =
+					columnFilterElements[key as keyof typeof columnFilterElements];
+			}
+
+			return options;
 		});
 	}, [data]);
 

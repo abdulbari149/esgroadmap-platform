@@ -396,8 +396,8 @@ const TargetSentenceView = {
   SentenceTargetYear: "Target Year(s)",
   DocURL: "DocURL",
   Country: "Country",
-  sector_code__1__NAICS_: "sector code #1 (NAICS)",
   sector_name__1__NAICS_: "sector name #1 (NAICS)",
+  sector_code__1__NAICS_: "sector code #1 (NAICS)",
   upload_date: "Upload Date",
 } as const
 
