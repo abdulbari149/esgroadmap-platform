@@ -29,6 +29,7 @@ type PrismaTables =
   | Prisma.$SentenceWasteViewPayload
   | Prisma.$SentenceSuppliersViewPayload
   | Prisma.$SentenceRenewablesViewPayload
+  | Prisma.$SentenceAllViewPayload
 
 export type TableData<
   PrismaModel extends PrismaTables,

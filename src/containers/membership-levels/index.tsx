@@ -1,34 +1,6 @@
 import React from "react";
 import SelectButton from "./select-button";
-
-const levels = [
-	{
-		id: 1,
-		title: <>Free account</>,
-		price: <>Free.</>,
-		level: 1,
-	},
-	{
-		id: 2,
-		title: <>Comprehensive account Analysts&apos; club</>,
-		price: (
-			<>
-				$0.00 <span className="font-normal">now and then</span> $20.00 per
-				Month.{" "}
-				<span className="font-normal">
-					After your initial payment, your first payment is Free.
-				</span>
-			</>
-		),
-		level: 2,
-	},
-	{
-		id: 3,
-		title: <>Comprehensive account &mdash; University access</>,
-		price: <>Free.</>,
-		level: 3,
-	},
-];
+import plans from "@/constants/plans";
 
 const MembershipLevels = () => {
 	return (
@@ -38,12 +10,12 @@ const MembershipLevels = () => {
 				<p className="font-semibold">Price</p>
 				<div />
 
-				{levels.map((level) => {
+				{plans.map((plan) => {
 					return (
 						<>
-							<p className="font-semibold">{level.title}</p>
-							<p className="font-semibold">{level.price}</p>
-							<SelectButton level={level.level} />
+							<p className="font-semibold">{plan.title}</p>
+							<p className="font-semibold">{plan.price}</p>
+							<SelectButton level={plan.level} />
 						</>
 					);
 				})}

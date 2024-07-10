@@ -26,11 +26,14 @@ import {
 	ContainerIcon,
 	RibbonIcon,
 	AtomIcon,
+	UserCircle,
+	MessageSquareText,
 } from "lucide-react";
 import React, { useState } from "react";
 import { redirect, usePathname } from "next/navigation";
 import Logo from "./logo";
 import Colors from "@/styles/colors";
+import useMediaQuery from "@/hooks/use-media-query";
 
 type SidebarItemWithoutSubMenu = {
 	id: number;
@@ -52,67 +55,72 @@ const sideBarNavigation: SidebarItem[] = [
 	},
 	{
 		id: 2,
-		name: "Targets & Tools",
-		icon: TargetIcon,
-		link: "/dashboard/targets/",
-		submenus: [
-			{
-				id: 1,
-				name: "Carbon Reduction",
-				link: "/dashboard/targets/carbon-reduction",
-				icon: BiohazardIcon,
-			},
-			// {
-			// 	id: 2,
-			// 	name: "All Company",
-			// 	link: "/dashboard/targets/company",
-			// 	icon: Building2Icon,
-			// },
-			{
-				id: 3,
-				name: "Waste & Recycling",
-				link: "/dashboard/targets/waste-&-recycling",
-				icon: RecycleIcon,
-			},
-			{
-				id: 4,
-				name: "Water Management",
-				link: "/dashboard/targets/water-management",
-				icon: CableCarIcon,
-			},
-			{
-				id: 5,
-				name: "Supply Chain",
-				link: "/dashboard/targets/supply-chain",
-				icon: ContainerIcon,
-			},
-			{
-				id: 6,
-				name: "Gender Diversity",
-				link: "/dashboard/targets/gender-diversity",
-				icon: RibbonIcon,
-			},
-			{
-				id: 7,
-				name: "Renewables",
-				link: "/dashboard/targets/renewables",
-				icon: AtomIcon,
-			},
-		],
+		name: "Carbon Reduction",
+		link: "/dashboard/targets/carbon-reduction",
+		icon: BiohazardIcon,
+	},
+	{
+		id: 2,
+		name: "All Company",
+		link: "/dashboard/targets/all-company",
+		icon: Building2Icon,
+	},
+	{
+		id: 3,
+		name: "Waste & Recycling",
+		link: "/dashboard/targets/waste-&-recycling",
+		icon: RecycleIcon,
+	},
+	{
+		id: 4,
+		name: "Water Management",
+		link: "/dashboard/targets/water-management",
+		icon: CableCarIcon,
+	},
+	{
+		id: 5,
+		name: "Supply Chain",
+		link: "/dashboard/targets/supply-chain",
+		icon: ContainerIcon,
+	},
+	{
+		id: 6,
+		name: "Gender Diversity",
+		link: "/dashboard/targets/gender-diversity",
+		icon: RibbonIcon,
+	},
+	{
+		id: 7,
+		name: "Renewables",
+		link: "/dashboard/targets/renewables",
+		icon: AtomIcon,
+	},
+	{
+		id: 8,
+		name: "Account",
+		link: "/dashboard/account",
+		icon: UserCircle,
+	},
+	{
+		id: 8,
+		name: "FAQs",
+		link: "/dashboard/faqs",
+		icon: MessageSquareText,
 	},
 ];
 
 const Sidebar = () => {
 	const [collapsed, setCollapsed] = useState(false);
 	const pathname = usePathname();
+	const { isLargeDevice, isExtraLargeDevice, isMediumDevice, isSmallDevice } =
+		useMediaQuery();
+	const full = !collapsed && isExtraLargeDevice;
 
-	const full = !collapsed;
-
-	const HeaderIcon = collapsed ? MenuIcon : CloseIcon;
+	const HeaderIcon = !full ? MenuIcon : CloseIcon;
 
 	return (
 		<ReactSidebar
-			collapsed={collapsed}
+			collapsed={collapsed || isMediumDevice || isSmallDevice || isLargeDevice}
 			width={"20vw"}
 			style={{ backgroundColor: Colors.white }}
 			transitionDuration={800}
@@ -122,7 +130,7 @@ const Sidebar = () => {
 				{full && <Logo />}
 				<div
 					onClick={() => setCollapsed((prev) => !prev)}
-					className="cursor-pointer transition-all"
+					className="cursor-pointer transition-all mx-auto xl:mx-0"
 				>
 					<HeaderIcon size={20} color="#000000" className="cursor-pointer" />
 				</div>

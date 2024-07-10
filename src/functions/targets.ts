@@ -4,6 +4,35 @@ import transformTableData from '@/utils/transform-table-data'
 import { Prisma } from '@prisma/client'
 import prisma from '@/lib/prisma'
 
+
+
+export type SentenceAllCompanyData = TableData<
+  Prisma.$SentenceAllViewPayload,
+  typeof columns.TargetSentenceView
+>
+
+const getSentenceAllCompanyData = async () => {
+  const data = await prisma.sentenceAllView.findMany({
+    select: {
+      id: true,
+      Company: true,
+      DocURL: true,
+      Target_sentence: true,
+      SentenceTargetYear: true,
+      Country: true,
+      sector_code__1__NAICS_: true,
+      sector_name__1__NAICS_: true,
+      upload_date: true,
+    },
+  })
+
+  return transformTableData(
+    data,
+    columns.TargetSentenceView,
+  ) as SentenceAllCompanyData[]
+}
+
+
 export type SentenceCarbonData = TableData<
   Prisma.$SentenceCarbonViewPayload,
   typeof columns.TargetSentenceView
@@ -162,6 +191,7 @@ const getSentenceRenewablesData = async () => {
 
 
 export {
+  getSentenceAllCompanyData,
   getSentenceGenderData,
   getSentenceWasteData,
   getSentenceSupplierData,

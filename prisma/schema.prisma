@@ -911,7 +911,7 @@ view targetsentenceview {
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-view sentenceallview {
+view SentenceAllView {
   Company                                           String? @db.MediumText
   emails                                            String? @db.MediumText
   full_text                                         String? @db.MediumText
@@ -939,7 +939,7 @@ view sentenceallview {
   sentence_waste                                    String? @map("sentence-waste") @db.VarChar(20)
   sentence_other                                    String? @map("sentence-other") @db.VarChar(20)
   upload_date                                       String? @map("upload-date") @db.MediumText
-  id                                                String? @db.VarChar(11)
+  id                                                Int     @unique @db.Int
   PageURL                                           String? @db.VarChar(255)
   DocURL                                            String? @db.VarChar(255)
   DocTitle                                          String? @db.VarChar(255)
@@ -965,7 +965,7 @@ view sentenceallview {
   sector_code__5__NAICS_                            String? @map("sector code #5 (NAICS)") @db.VarChar(10)
   sector_name__5__NAICS_                            String? @map("sector name #5 (NAICS)") @db.VarChar(255)
 
-  @@ignore
+  @@map("sentenceallview")
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -1288,7 +1288,7 @@ view SentenceSuppliersView {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view SentenceRenewablesView {
-  id                                                String  @default("") @id @db.VarChar(11)
+  id                                                String  @id @default("") @db.VarChar(11)
   Company                                           String? @db.MediumText
   emails                                            String? @db.MediumText
   full_text                                         String? @db.MediumText
@@ -1550,4 +1550,22 @@ enum wp_wpdatatables_columns_input_type {
   selectbox
   multi_selectbox @map("multi-selectbox")
   attachment
+}
+
+model User {
+  id Int @unique(map: "id") @default(autoincrement())
+
+  username     String  @db.VarChar(255)
+  email        String  @db.VarChar(255)
+  password     String  @db.VarChar(255)
+  isActive     Boolean @map("is_active") @db.TinyInt
+  profileImage String  @default("") @map("profile_image") @db.Text
+  plan         Int     @default(1) @map("plan") @db.Int
+  role         String  @default("user") @db.VarChar(255)
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("users")
 }
