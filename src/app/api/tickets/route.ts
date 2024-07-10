@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       json,
     )
     return NextResponse.json(
-      { data: updatedUser, error: null, success: true },
+      { data: null, error: null, success: true },
       { status: HttpStatusCode.Ok },
     )
   } catch (error) {

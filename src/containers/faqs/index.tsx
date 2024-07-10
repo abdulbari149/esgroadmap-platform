@@ -77,20 +77,20 @@ const Faqs = () => {
 				Frequently Asked Questions
 			</h1>
 			<div className="flex flex-row gap-10 pt-10 w-[100%]">
-				<Accordion type="multiple" collapsible className="flex-1 space-y-3">
+				<Accordion type="multiple" className="flex-1 space-y-3">
 					{faqs.slice(0, faqs.length / 2).map((faq) => {
 						return (
-							<AccordionItem value={faq.id} key={faq.id}>
+							<AccordionItem value={faq.id.toString()} key={faq.id}>
 								<AccordionTrigger>{faq.title}</AccordionTrigger>
 								<AccordionContent>{faq.description} </AccordionContent>
 							</AccordionItem>
 						);
 					})}
 				</Accordion>
-				<Accordion type="multiple" collapsible className="flex-1 space-y-3">
+				<Accordion type="multiple" className="flex-1 space-y-3">
 					{faqs.slice(faqs.length / 2).map((faq) => {
 						return (
-							<AccordionItem value={faq.id} key={faq.id}>
+							<AccordionItem value={faq.id.toString()} key={faq.id}>
 								<AccordionTrigger>{faq.title}</AccordionTrigger>
 								<AccordionContent>{faq.description} </AccordionContent>
 							</AccordionItem>

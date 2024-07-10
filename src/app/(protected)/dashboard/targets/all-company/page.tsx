@@ -7,6 +7,8 @@ export const metadata: Metadata = {
 	description: "All Company Table",
 };
 
+export const dynamic = "force-dynamic";
+
 const Page = async () => {
 	const data = await getSentenceAllCompanyData();
 	return <TargetTable title="All Company" data={data} />;

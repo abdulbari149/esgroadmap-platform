@@ -1,6 +1,10 @@
 import MembershipAccount from "@/containers/membership-account";
-import React from "react";
+import React, { Suspense } from "react";
 
-const page = () => <MembershipAccount />;
+const page = () => (
+	<Suspense>
+		<MembershipAccount />
+	</Suspense>
+);
 
 export default page;
