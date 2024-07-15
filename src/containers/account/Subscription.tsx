@@ -1,18 +1,59 @@
+"use client";
 import plans from "@/constants/plans";
-import React from "react";
+import React, { useCallback, useMemo, useState } from "react";
+import subscription from "@/api/subscription";
+import auth from "@/api/auth";
+import { toast } from "react-toastify";
+import env from "@/config/env.config";
+import { User } from "@prisma/client";
 
-const Subscription: React.FC<{ currentPlan: number }> = ({ currentPlan }) => {
-	const plan = plans.find((p) => p.level === currentPlan);
+const Subscription: React.FC<{ user: Omit<User, 'deletedAt' | 'password'>; accessToken: string }> = ({
+	user,
+	accessToken,
+}) => {
+	const [plan, setPlan] = useState(() => {
+		return plans.find((p) => p.level === user.plan);
+	});
+
+	const onUpgrade = useCallback(async () => {
+		if (!plan) throw new Error("Plan not found");
+		const { user } = await auth.me(accessToken);
+
+		window.location.href =
+			env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK + `?prefilled_email=${user.email}`;
+	
+	}, [accessToken, plan]);
+
+	const onCancel = useCallback(async () => {
+		try {
+			const message = await subscription.cancel();
+			const { user } = await auth.me(accessToken);
+			const planData = plans.find((p) => p.level === user.plan);
+			setPlan(planData);
+			toast.success(message)
+		} catch (error) {
+			toast.error((error as Error).message);
+		}
+	}, [accessToken]);
+
+	const levelNextActions = useMemo(
+		() =>
+			({
+				1: { text: "Upgrade", onClick: onUpgrade },
+				2: { text: "Cancel", onClick: onCancel },
+			} as const),
+		[onCancel, onUpgrade]
+	);
+
+	const action = useMemo(() => {
+		return plan && plan.level in levelNextActions
+			? levelNextActions[plan.level as keyof typeof levelNextActions]
+			: ({ text: "", onClick: async () => {} } as const);
+	}, [plan, levelNextActions]);
 
 	if (!plan) {
 		return <p>Invalid Plan!</p>;
 	}
-
-	const levelNextActions = {
-		1: "Upgrade",
-		2: "Cancel",
-		3: "Upgrade",
-	};
 
 	return (
 		<div className="flex flex-col gap-5 w-[100%]">
@@ -27,15 +68,15 @@ const Subscription: React.FC<{ currentPlan: number }> = ({ currentPlan }) => {
 						{plan.title}
 					</span>
 				</p>
-
-				<button
-					className="w-fit py-2 px-5 rounded-sm text-[16px] text-white mb-5"
-					style={{ background: "rgb(25, 56, 57)" }}
-				>
-					{plan.level in levelNextActions
-						? levelNextActions[plan.level as keyof typeof levelNextActions]
-						: ""}
-				</button>
+				{plan.level !== 3 && (
+					<button
+						className="w-fit py-2 px-5 rounded-sm text-[16px] text-white mb-5"
+						style={{ background: "rgb(25, 56, 57)" }}
+						onClick={action.onClick}
+					>
+						{action.text}
+					</button>
+				)}
 			</div>
 		</div>
 	);

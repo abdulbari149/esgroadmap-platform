@@ -14,7 +14,7 @@ const MembershipLevels = () => {
 					return (
 						<>
 							<p className="font-semibold">{plan.title}</p>
-							<p className="font-semibold">{plan.price}</p>
+							<p className="font-semibold">{plan.price[0]}</p>
 							<SelectButton level={plan.level} />
 						</>
 					);

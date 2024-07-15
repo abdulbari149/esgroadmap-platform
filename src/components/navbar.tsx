@@ -19,13 +19,13 @@ const navItems = [
 	{
 		id: 5,
 		title: "My account",
-		link: "/auth/sign-up",
+		link: "/auth/login",
 		isButton: false,
 	},
 	{
 		id: 3,
 		title: "Sign up",
-		link: "/auth/signup",
+		link: "/auth/sign-up",
 		isButton: false,
 		className: "text-[#219E99]",
 	},

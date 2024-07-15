@@ -28,12 +28,16 @@ import {
 	AtomIcon,
 	UserCircle,
 	MessageSquareText,
+	LogOutIcon,
 } from "lucide-react";
 import React, { useState } from "react";
 import { redirect, usePathname } from "next/navigation";
 import Logo from "./logo";
 import Colors from "@/styles/colors";
 import useMediaQuery from "@/hooks/use-media-query";
+import auth from "@/api/auth";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type SidebarItemWithoutSubMenu = {
 	id: number;
@@ -96,6 +100,12 @@ const sideBarNavigation: SidebarItem[] = [
 		icon: AtomIcon,
 	},
 	{
+		id: 10,
+		name: "Support Tickets",
+		link: "/dashboard/tickets",
+		icon: UserCircle,
+	},
+	{
 		id: 8,
 		name: "Account",
 		link: "/dashboard/account",
@@ -107,6 +117,12 @@ const sideBarNavigation: SidebarItem[] = [
 		link: "/dashboard/faqs",
 		icon: MessageSquareText,
 	},
+	{
+		id: 8,
+		name: "Logout",
+		link: "/auth/login",
+		icon: LogOutIcon,
+	},
 ];
 
 const Sidebar = () => {
@@ -114,6 +130,7 @@ const Sidebar = () => {
 	const pathname = usePathname();
 	const { isLargeDevice, isExtraLargeDevice, isMediumDevice, isSmallDevice } =
 		useMediaQuery();
+	const router = useRouter();
 	const full = !collapsed && isExtraLargeDevice;
 
 	const HeaderIcon = !full ? MenuIcon : CloseIcon;
@@ -187,7 +204,20 @@ const Sidebar = () => {
 					return (
 						<MenuItem
 							key={nav.id}
-							component={<Link href={nav.link} />}
+							component={
+								nav.name !== "Logout" ? <Link href={nav.link} /> : undefined
+							}
+							onClick={() => {
+								if (nav.name === "Logout") {
+									setTimeout(async () => {
+										try {
+											const message = await auth.logout();
+											router.replace("/auth/login");
+											toast.success(message);
+										} catch (error) {}
+									}, 500);
+								}
+							}}
 							active={isActive}
 							icon={<Icon size={20} color={styles.color} />}
 							style={styles}

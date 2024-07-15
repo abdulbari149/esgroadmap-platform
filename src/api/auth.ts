@@ -52,7 +52,7 @@ const me = async (accessToken: string) => {
     })
 
     if (!response.data.success) {
-      throw new Error(response.data.error ?? '')
+      throw new Error(response?.data?.error ?? '')
     }
     return response.data.data as {
       user: Omit<User, 'password'>
@@ -60,7 +60,7 @@ const me = async (accessToken: string) => {
     }
   } catch (error) {
     if (error instanceof AxiosError) {
-      throw new Error(error.response?.data.error)
+      throw new Error(error?.response?.data?.error)
     }
     throw new Error('Cannot get user data')
   }
@@ -103,6 +103,29 @@ const editProfile = async (body: z.infer<typeof editProfileSchema>) => {
   }
 }
 
-const auth = { signup, login, me, changePassword, editProfile }
+const logout = async () => {
+  try {
+    const response = await router.private.get('/auth/logout')
+
+    if (!response.data.success) {
+      throw new Error(response.data.error ?? '')
+    }
+    return response.data.message
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(error.response?.data?.error)
+    }
+    throw new Error('logout failed')
+  }
+}
+
+const auth = { 
+  signup, 
+  login, 
+  me, 
+  changePassword, 
+  editProfile,
+  logout 
+}
 
 export default auth

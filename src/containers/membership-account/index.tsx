@@ -1,5 +1,6 @@
 "use client";
 import auth from "@/api/auth";
+import plans from "@/constants/plans";
 import { signupSchema } from "@/lib/schema";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -31,6 +32,11 @@ const MembershipAccount = () => {
 		password: false,
 		confirmPassword: false,
 	});
+
+	const level = params?.get("level") ? Number(params.get("level")) : 1;
+
+	const plan = plans.find((plan) => plan.level === level);
+	if (!plan) throw new Error("Invalid level");
 
 	const [data, setData] = useState<FormData>(initialData);
 
@@ -126,15 +132,29 @@ const MembershipAccount = () => {
 
 			const user = await auth.signup({
 				...signupData,
-				plan: 1,
+				plan: level === 2 ? 1 : level,
 			});
+			if ("paymentLink" in plan && plan.paymentLink) {
+				toast.success(
+					`Your information has been saved! We are redirecting you to checkout shortly....`
+				);
+
+				setTimeout(() => {
+					window.location.href =
+						plan.paymentLink + `?prefilled_email=${user.email}`;
+				}, 1000);
+
+				window.location.href =
+					plan.paymentLink + `?prefilled_email=${user.email}`;
+			} else {
+				toast.success(
+					`Congratualtions ${user.username}, your account has been created!`
+				);
+				router.replace("/auth/login");
+			}
 
 			setData({ ...initialData });
 			setLoading(false);
-			toast.success(
-				`Congratualtions ${user.username}, your account has been created!`
-			);
-			router.replace("/auth/login");
 		} catch (error) {
 			setLoading(false);
 			toast.error((error as Error)?.message);
@@ -159,25 +179,20 @@ const MembershipAccount = () => {
 						</p>
 					</div>
 					<p className="text-[16px] text-black">
-						You have selected the{" "}
-						<strong>Comprehensive account Analysts&apos; club</strong>
-						membership level.
+						You have selected the <strong>{plan.title}</strong> membership
+						level.
 					</p>
+					<p className="text-[16px] text-black">{plan.title} PLAN</p>
 					<p className="text-[16px] text-black">
-						Comprehensive account &ldquo;Analysts&apos; club&rdquo; PLAN
-					</p>
-					<p className="text-[16px] text-black">
-						The price for membership is <strong>$0.00</strong> now and then{" "}
-						<strong>$20.00 per Month.</strong> After your initial payment, your
-						first payment is Free.
+						The price for membership {plan.price[1]}
 					</p>
 
-					<p className="text-[12px] text-black font-normal">
+					{/* <p className="text-[12px] text-black font-normal">
 						Do you have a discount code?{" "}
 						<span className="underline cursor-pointer">
 							Click here to enter your discount code
 						</span>
-					</p>
+					</p> */}
 				</section>
 
 				<div
@@ -341,7 +356,7 @@ const MembershipAccount = () => {
 					onClick={handleSubmit}
 					disabled={loading}
 				>
-					Submit And Confirm
+					{"paymentLink" in plan ? "Pay with Stripe" : "Sign up"}
 				</button>
 			</div>
 		</div>

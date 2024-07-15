@@ -1562,10 +1562,81 @@ model User {
   profileImage String  @default("") @map("profile_image") @db.Text
   plan         Int     @default(1) @map("plan") @db.Int
   role         String  @default("user") @db.VarChar(255)
+  stripeId     String? @default("stripe_id") @db.VarChar(255)
+
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime?          @map("updated_at")
+  deletedAt        DateTime?          @map("deleted_at")
+  tickets          Ticket[]
+  ticketComments   TicketComment[]
+  UserSubscription UserSubscription[]
+
+  @@map("users")
+}
+
+model Ticket {
+  id Int @unique(map: "id") @default(autoincrement())
+
+  userId   Int  @db.Int
+  postedBy User @relation(fields: [userId], references: [id])
+
+  title       String @db.VarChar(255)
+  description String @db.Text
+  status      String @db.VarChar(255)
+
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime?        @map("updated_at")
+  deletedAt DateTime?        @map("deleted_at")
+  documents TicketDocument[]
+  comments  TicketComment[]
+
+  @@map("tickets")
+}
+
+model TicketDocument {
+  id Int @unique(map: "id") @default(autoincrement())
+
+  url  String
+  name String
+  size Int
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  ticketId  Int
+  ticket    Ticket    @relation(fields: [ticketId], references: [id])
+
+  @@map("ticket_documents")
+}
+
+model TicketComment {
+  id Int @unique(map: "id") @default(autoincrement())
+
+  text     String @db.Text
+  ticketId Int
+  ticket   Ticket @relation(fields: [ticketId], references: [id])
+
+  userId   Int  @db.Int
+  postedBy User @relation(fields: [userId], references: [id])
 
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
-  @@map("users")
+  @@map("ticket_comments")
+}
+
+model UserSubscription {
+  id Int @unique(map: "id") @default(autoincrement())
+
+  userId Int  @db.Int
+  user   User @relation(fields: [userId], references: [id])
+
+  subscriptionId String @map("subscription_id")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("user_subscriptions")
 }

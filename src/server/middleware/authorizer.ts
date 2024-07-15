@@ -32,6 +32,7 @@ export default async function authorizer() {
       createdAt: true,
       updatedAt: true,
       deletedAt: true,
+      stripeId: true,
     },
   })
 

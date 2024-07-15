@@ -116,3 +116,17 @@ export const editProfileSchema = z.object({
       message: 'Email Address cannot be empty',
     }),
 })
+
+export const createTicketSchema = z.object({
+  title: z
+    .string({
+      required_error: 'Title is required',
+      invalid_type_error: 'Title must be string',
+    })
+    .min(5, { message: 'Title needs to be bigger than or equal to 5 characters' })
+    .max(250, { message: 'Title cannot be longer than 250 characters' }),
+  description: z.string({
+    required_error: 'Title is required',
+    invalid_type_error: 'Title must be string',
+  }).min(10, { message: 'Title needs to be bigger than or equal to 10 characters' })
+})

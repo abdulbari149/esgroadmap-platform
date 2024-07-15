@@ -6,67 +6,81 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
+import Image from "next/image";
+import Link from "next/link";
 
 const faqs = [
 	{
 		id: 1,
-		title: "How do I reset my password?",
-		description:
-			"To reset your password, go to the login page and click on 'Forgot Password'. Follow the instructions to reset your password.",
+		title: "Which companies are covered?",
+		description: (
+			<>
+				The list of companies currently covered by ESGRoadmap tools can be
+				accessed{" "}
+				<a target="_blank" href="">
+					here
+				</a>
+			</>
+		),
 	},
+	// How do I export data?
+	// You can export data to csv and excel using the top right button in the data table.
+	// [screenshot]
 	{
 		id: 2,
-		title: "Where can I find my order history?",
-		description:
-			"You can find your order history by logging into your account and navigating to the 'Order History' section under 'My Account'.",
+		title: "How do I export data?",
+		description: (
+			<>
+				You can export data to csv and excel using the top right button in the
+				data table.
+				<Image
+					src={"/images/footer/logo.png"}
+					alt="CSV download"
+					objectFit="contain"
+					width={200}
+					height={100}
+				/>
+			</>
+		),
 	},
 	{
 		id: 3,
-		title: "How do I contact customer support?",
-		description:
-			"You can contact customer support by clicking on the 'Contact Us' link at the bottom of our website or by calling our support hotline at 1-800-123-4567.",
+		title: "How can I contact you?",
+		description: (
+			<>
+				<p className="mb-2">
+					If you have a specific user query, you can raise a ticket{" "}
+					<Link
+						className="text-blue-600"
+						href={"/dashboard/tickets/new"}
+						target="_blank"
+					>
+						here
+					</Link>
+				</p>
+				<p>
+					For general feedback and suggestions, you can contact use [this
+					contact form].
+				</p>
+			</>
+		),
 	},
 	{
 		id: 4,
-		title: "What is the return policy?",
-		description:
-			"Our return policy allows for returns within 30 days of purchase. Items must be in their original condition and packaging. Please visit our 'Return Policy' page for more details.",
-	},
-	{
-		id: 5,
-		title: "How can I track my order?",
-		description:
-			"To track your order, log into your account and go to 'My Orders'. Click on the order you want to track and you will find the tracking information there.",
-	},
-	{
-		id: 6,
-		title: "What payment methods are accepted?",
-		description:
-			"We accept various payment methods including credit/debit cards, PayPal, and Apple Pay. Please check our 'Payment Methods' page for a full list of accepted payment options.",
-	},
-	{
-		id: 7,
-		title: "How do I update my billing information?",
-		description:
-			"To update your billing information, log into your account and go to 'Billing Information' under 'My Account'. Make the necessary changes and save them.",
-	},
-	{
-		id: 8,
-		title: "Can I change or cancel my order?",
-		description:
-			"You can change or cancel your order within 24 hours of placing it. Please contact our customer support team for assistance.",
-	},
-	{
-		id: 9,
-		title: "How do I apply a discount code?",
-		description:
-			"To apply a discount code, enter the code at checkout in the 'Discount Code' field and click 'Apply'. The discount will be reflected in your total.",
-	},
-	{
-		id: 10,
-		title: "What are the shipping options?",
-		description:
-			"We offer various shipping options including standard, expedited, and overnight shipping. Please visit our 'Shipping Information' page for more details on shipping times and costs.",
+		title: "How do you source your data?",
+		description: (
+			<>
+				<p className="mb-2">
+					All data is from primary sources, the companies themselves. We assess
+					their reports (such as annual and sustainability reports) as well as
+					press releases.
+				</p>{" "}
+				<p>
+					To access the specific source of an ESG target you are interested in,
+					go to the field [source] in the data table.
+				</p>
+			</>
+		),
 	},
 ];
 
