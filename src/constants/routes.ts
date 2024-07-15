@@ -1,4 +1,4 @@
-const publicRoutes = [
+export const publicRoutes = [
   '/auth/login',
   '/auth/sign-up',
   '/auth/membership-account/membership-checkout',
@@ -6,7 +6,13 @@ const publicRoutes = [
   '/auth/lost-password',
   '/images',
   '/_next/static',
-  '/api'
+  '/api',
 ]
 
-export default publicRoutes;
+export const freePlanRoutes = [
+  { route: '/dashboard', exact: true },
+  { route: '/dashboard/targets/carbon-reduction', exact: true },
+  { route: '/dashboard/tickets', exact: false },
+  { route: '/dashboard/account', exact: true },
+  { route: '/dashboard/faqs', exact: true },
+]

@@ -6,14 +6,17 @@ import auth from "@/api/auth";
 import { toast } from "react-toastify";
 import env from "@/config/env.config";
 import { User } from "@prisma/client";
+import { useRouter } from "next/navigation";
 
-const Subscription: React.FC<{ user: Omit<User, 'deletedAt' | 'password'>; accessToken: string }> = ({
-	user,
-	accessToken,
-}) => {
+const Subscription: React.FC<{
+	user: Omit<User, "deletedAt" | "password">;
+	accessToken: string;
+}> = ({ user, accessToken }) => {
 	const [plan, setPlan] = useState(() => {
 		return plans.find((p) => p.level === user.plan);
 	});
+
+	const router = useRouter();
 
 	const onUpgrade = useCallback(async () => {
 		if (!plan) throw new Error("Plan not found");
@@ -21,7 +24,6 @@ const Subscription: React.FC<{ user: Omit<User, 'deletedAt' | 'password'>; acces
 
 		window.location.href =
 			env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK + `?prefilled_email=${user.email}`;
-	
 	}, [accessToken, plan]);
 
 	const onCancel = useCallback(async () => {
@@ -30,11 +32,12 @@ const Subscription: React.FC<{ user: Omit<User, 'deletedAt' | 'password'>; acces
 			const { user } = await auth.me(accessToken);
 			const planData = plans.find((p) => p.level === user.plan);
 			setPlan(planData);
-			toast.success(message)
+			toast.success(message);
+			router.refresh();
 		} catch (error) {
 			toast.error((error as Error).message);
 		}
-	}, [accessToken]);
+	}, [accessToken, router]);
 
 	const levelNextActions = useMemo(
 		() =>

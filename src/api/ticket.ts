@@ -39,7 +39,7 @@ const list = async (options: { accessToken: string }) => {
   } catch (error) {
     console.log({ error })
     if (error instanceof AxiosError) {
-      throw new Error(error.response?.data.error)
+      throw new Error(error.response?.data?.error)
     }
     throw new Error('Cannot get data')
   }
@@ -57,7 +57,7 @@ const getById = async (id: string, options: { accessToken: string }) => {
     return response.data.data as SupportTicket
   } catch (error) {
     if (error instanceof AxiosError) {
-      throw new Error(error.response?.data.error)
+      throw new Error(error?.response?.data?.error)
     }
     throw new Error('Cannot get data')
   }
@@ -150,7 +150,7 @@ const listComments = async (id: number, options?: { accessToken?: string }) => {
   } catch (error) {
     console.log(error)
     if (error instanceof AxiosError) {
-      throw new Error(error.response?.data.error)
+      throw new Error(error.response?.data?.error)
     }
     throw new Error('Cannot list comments')
   }

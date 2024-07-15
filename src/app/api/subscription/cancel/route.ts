@@ -32,6 +32,7 @@ export async function GET(request: Request) {
         data: {},
         success: true,
         error: null,
+        message: 'Subscription cancelled successfully!'
       },
       {
         status: HttpStatusCode.Ok,

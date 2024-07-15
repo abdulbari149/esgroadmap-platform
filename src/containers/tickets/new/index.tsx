@@ -136,7 +136,7 @@ const CreateNewTicket: React.FC<{ user: Omit<User, "password"> }> = ({
 			setLoading(false);
 			fileUploadRef.current.clear();
 			setData({ ...initialData });
-			router.back();
+			router.replace("/dashboard/tickets");
 			toast.success(`Ticket created successfully!`);
 		} catch (error) {
 			setLoading(false);
@@ -225,8 +225,8 @@ const CreateNewTicket: React.FC<{ user: Omit<User, "password"> }> = ({
 
 				<FileUpload
 					name="files[]"
-					multiple
 					ref={fileUploadRef}
+					multiple={true}
 					maxFileSize={1000000}
 					emptyTemplate={
 						<p className="m-0">Drag and drop files to here to upload.</p>
@@ -238,9 +238,6 @@ const CreateNewTicket: React.FC<{ user: Omit<User, "password"> }> = ({
 					}}
 					uploadOptions={{ className: "hidden" }}
 					cancelOptions={{ className: "hidden" }}
-					onSelect={(event) => {
-						console.log(event.files);
-					}}
 					headerStyle={{ padding: 10 }}
 					contentStyle={{
 						padding: 10,

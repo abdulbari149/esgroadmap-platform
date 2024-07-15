@@ -96,9 +96,3 @@ export const POST = async (req: NextRequest) => {
     return handleError(error)
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}

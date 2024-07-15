@@ -24,7 +24,7 @@ const Account = async () => {
         {/* change password */}
         <ChangePassword />
         {/* user subscription */}
-        {me.user.role === 'admin' && (
+        {me.user.role !== 'admin' && (
           <Subscription user={me.user} accessToken={accessToken.value} />
         )}
       </div>
