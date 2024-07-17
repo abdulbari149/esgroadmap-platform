@@ -2,6 +2,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import { currentUser } from "@/functions/user";
+import NextTopLoader from "nextjs-toploader";
 
 const Sidebar = dynamic(() => import("@/components/sidebar"), { ssr: false });
 
@@ -14,6 +15,7 @@ const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
 			<div className="overflow-y-auto overflow-x-hidden w-[100%]">
 				{children}
 			</div>
+			<NextTopLoader color="#219e98" showSpinner={false} />
 		</div>
 	);
 };

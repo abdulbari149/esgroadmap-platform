@@ -1,17 +1,13 @@
-import TargetTable from "@/containers/target-table";
-import { getSentenceAllCompanyData } from "@/functions/targets";
 import { Metadata } from "next";
+import Target from "@/containers/target";
 
 export const metadata: Metadata = {
 	title: "All Company",
 	description: "All Company Table",
 };
 
-export const dynamic = "force-dynamic";
-
 const Page = async () => {
-	const data = await getSentenceAllCompanyData();
-	return <TargetTable title="All Company" data={data} />;
+	return <Target title="All Company" tableName="all_company" />;
 };
 
 export default Page;

@@ -1,5 +1,4 @@
-import TargetTable from "@/containers/target-table";
-import { getSentenceWaterData } from "@/functions/targets";
+import Target from "@/containers/target";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,11 +6,8 @@ export const metadata: Metadata = {
 	description: "Water Management Table",
 };
 
-export const dynamic = "force-dynamic";
-
-const Page = async () => {
-	const data = await getSentenceWaterData();
-	return <TargetTable title="Water Management" data={data} />;
+const Page = () => {
+	return <Target title="Water Management" tableName="water_management" />;
 };
 
 export default Page;

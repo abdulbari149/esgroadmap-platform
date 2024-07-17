@@ -4,9 +4,7 @@ import transformTableData from '@/utils/transform-table-data'
 import { Prisma } from '@prisma/client'
 import prisma from '@/lib/prisma'
 
-
-
-export type SentenceAllCompanyData = TableData<
+export type TargetSentenceData = TableData<
   Prisma.$SentenceAllViewPayload,
   typeof columns.TargetSentenceView
 >
@@ -29,14 +27,8 @@ const getSentenceAllCompanyData = async () => {
   return transformTableData(
     data,
     columns.TargetSentenceView,
-  ) as SentenceAllCompanyData[]
+  ) as TargetSentenceData[]
 }
-
-
-export type SentenceCarbonData = TableData<
-  Prisma.$SentenceCarbonViewPayload,
-  typeof columns.TargetSentenceView
->
 
 const getSentenceCarbonData = async () => {
   const data = await prisma.sentenceCarbonView.findMany({
@@ -51,18 +43,14 @@ const getSentenceCarbonData = async () => {
       sector_name__1__NAICS_: true,
       upload_date: true,
     },
+    take: 20,
   })
 
   return transformTableData(
     data,
     columns.TargetSentenceView,
-  ) as SentenceCarbonData[]
+  ) as TargetSentenceData[]
 }
-
-export type SentenceGenderData = TableData<
-  Prisma.$SentenceGenderViewPayload,
-  typeof columns.TargetSentenceView
->
 
 const getSentenceGenderData = async () => {
   const data = await prisma.sentenceGenderView.findMany({
@@ -82,13 +70,8 @@ const getSentenceGenderData = async () => {
   return transformTableData(
     data,
     columns.TargetSentenceView,
-  ) as SentenceGenderData[]
+  ) as TargetSentenceData[]
 }
-
-export type SentenceWaterData = TableData<
-  Prisma.$SentenceWaterViewPayload,
-  typeof columns.TargetSentenceView
->
 
 const getSentenceWaterData = async () => {
   const data = await prisma.sentenceWaterView.findMany({
@@ -108,13 +91,8 @@ const getSentenceWaterData = async () => {
   return transformTableData(
     data,
     columns.TargetSentenceView,
-  ) as SentenceWaterData[]
+  ) as TargetSentenceData[]
 }
-
-export type SentenceWasteData = TableData<
-  Prisma.$SentenceWasteViewPayload,
-  typeof columns.TargetSentenceView
->
 
 const getSentenceWasteData = async () => {
   const data = await prisma.sentenceWasteView.findMany({
@@ -134,13 +112,8 @@ const getSentenceWasteData = async () => {
   return transformTableData(
     data,
     columns.TargetSentenceView,
-  ) as SentenceWasteData[]
+  ) as TargetSentenceData[]
 }
-
-export type SentenceSupplierData = TableData<
-  Prisma.$SentenceSuppliersViewPayload,
-  typeof columns.TargetSentenceView
->
 
 const getSentenceSupplierData = async () => {
   const data = await prisma.sentenceSuppliersView.findMany({
@@ -160,13 +133,8 @@ const getSentenceSupplierData = async () => {
   return transformTableData(
     data,
     columns.TargetSentenceView,
-  ) as SentenceSupplierData[]
+  ) as TargetSentenceData[]
 }
-
-export type SentenceRenewableData = TableData<
-  Prisma.$SentenceRenewablesViewPayload,
-  typeof columns.TargetSentenceView
->
 
 const getSentenceRenewablesData = async () => {
   const data = await prisma.sentenceRenewablesView.findMany({
@@ -186,16 +154,26 @@ const getSentenceRenewablesData = async () => {
   return transformTableData(
     data,
     columns.TargetSentenceView,
-  ) as SentenceRenewableData[]
+  ) as TargetSentenceData[]
 }
 
+export type TargetTables =
+  | 'carbon_reduction'
+  | 'gender_diversity'
+  | 'waste_&_recycling'
+  | 'supply_chain'
+  | 'water_management'
+  | 'renewables'
+  | 'all_company'
 
-export {
-  getSentenceAllCompanyData,
-  getSentenceGenderData,
-  getSentenceWasteData,
-  getSentenceSupplierData,
-  getSentenceWaterData,
-  getSentenceCarbonData,
-  getSentenceRenewablesData
+const targets: Record<TargetTables, () => Promise<TargetSentenceData[]>> = {
+  "waste_&_recycling": getSentenceWasteData,
+  carbon_reduction: getSentenceCarbonData,
+  gender_diversity: getSentenceGenderData,
+  renewables: getSentenceRenewablesData,
+  supply_chain: getSentenceSupplierData,
+  water_management: getSentenceWaterData,
+  all_company: getSentenceAllCompanyData,
 }
+
+export default targets;

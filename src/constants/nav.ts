@@ -20,6 +20,7 @@ import {
 	UserCircle,
 	MessageSquareText,
 	LogOutIcon,
+	Headset,
 } from "lucide-react";
 
 type SidebarItemWithoutSubMenu = {
@@ -89,7 +90,7 @@ const freeNavigation: SidebarItem[] = [
 		id: 10,
 		name: "Support Tickets",
 		link: "/dashboard/tickets",
-		icon: UserCircle,
+		icon: Headset,
 	},
 	{
 		id: 9,

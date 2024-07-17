@@ -1,5 +1,4 @@
-import TargetTable from "@/containers/target-table";
-import { getSentenceWasteData } from "@/functions/targets";
+import Target from "@/containers/target";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,11 +6,8 @@ export const metadata: Metadata = {
 	description: "Waste & Recycling Table",
 };
 
-export const dynamic = "force-dynamic";
-
-const Page = async () => {
-	const data = await getSentenceWasteData();
-	return <TargetTable title="Waste & Recycling" data={data} />;
+const Page = () => {
+	return <Target title="Waste & Recycling" tableName="waste_&_recycling" />;
 };
 
 export default Page;

@@ -1,18 +1,13 @@
-import TargetTable from "@/containers/target-table";
-import { getSentenceGenderData } from "@/functions/targets";
 import { Metadata } from "next";
+import Target from "@/containers/target";
 
 export const metadata: Metadata = {
 	title: "Gender Diversity",
 	description: "Gender Diversity Table",
 };
 
-export const dynamic = "force-dynamic";
-
 const Page = async () => {
-	const data = await getSentenceGenderData();
-
-	return <TargetTable title="Gender Diversity" data={data} />;
+	return <Target title="Gender Diversity" tableName="gender_diversity" />;
 };
 
 export default Page;
