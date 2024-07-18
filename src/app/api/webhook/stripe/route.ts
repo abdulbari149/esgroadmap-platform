@@ -70,12 +70,16 @@ export const POST = async (req: NextRequest) => {
 
     if (!sig) throw new Error('Sig not found')
     // const body = await req.json()
-    const body = await req.text()
-    console.log('Body: ', body)
+    const body = await req.json()
     let event
+    console.log('Signature: ', sig);
+    console.log('Text Body: ', body);
+    console.log('End point secret', endpointSecret)
+    // console.log('JSON Body: ', JSON.stringify(body, null, 2))
+    // console.log('Text body:', await req.text())
 
     try {
-      event = stripe.webhooks.constructEvent(body, sig, endpointSecret)
+      event = stripe.webhooks.constructEvent(JSON.stringify(body, null, 2), sig, endpointSecret)
     } catch (err) {
       throw new HttpBadRequestError(`Webhook Error: ${(err as Error).message}`)
     }
