@@ -71,7 +71,7 @@ export const POST = async (req: NextRequest) => {
     if (!sig) throw new Error('Sig not found')
     // const body = await req.json()
     const body = await req.text()
-    console.log(body)
+    console.log('Body: ', body)
     let event
 
     try {
