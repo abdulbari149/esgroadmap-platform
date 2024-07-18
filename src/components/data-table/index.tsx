@@ -95,7 +95,9 @@ function DataTable<TRow extends object>(props: DataTableProps<TRow>) {
 			if (option === "save") {
 				if (
 					Object.keys(filters).filter((key) => {
-						return "value" in filters[key] ? filters[key].value : false;
+						return "value" in filters[key]
+							? (filters[key] as DataTableFilterMetaData)?.value
+							: false;
 					}).length === 0
 				) {
 					toast.error("Please select some filters first");

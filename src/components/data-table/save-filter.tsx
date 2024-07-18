@@ -100,10 +100,13 @@ const SaveFilterDialog: React.FC<Props> = ({
 
 			<PRDataTable
 				value={Object.keys(filters)
-					.filter((key) => filters[key as keyof typeof filters].value)
+					.filter((key) =>
+						"value" in filters[key]
+							? (filters[key] as DataTableFilterMetaData)?.value
+							: false
+					)
 					.map((filterName, index) => {
-						const data = filters[filterName as keyof typeof filters]
-							.value as any;
+						const data = (filters[filterName] as DataTableFilterMetaData).value;
 						let value = "";
 
 						if (Array.isArray(data)) {
