@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Dialog } from "primereact/dialog";
 import {
+	DataTableFilterMeta,
 	DataTableFilterMetaData,
 	DataTable as PRDataTable,
 } from "primereact/datatable";
@@ -14,7 +15,7 @@ type Props = {
 	tableName: string;
 	show: boolean;
 	onClose: () => void;
-	filters: Record<string, DataTableFilterMetaData>;
+	filters: DataTableFilterMeta;
 };
 
 const SaveFilterDialog: React.FC<Props> = ({
@@ -38,9 +39,9 @@ const SaveFilterDialog: React.FC<Props> = ({
 	};
 
 	const onSave = async () => {
-		setLoading(true)
+		setLoading(true);
 		if (data.name.value.trim() === "") {
-			setLoading(false)
+			setLoading(false);
 			return setError();
 		}
 
@@ -51,10 +52,10 @@ const SaveFilterDialog: React.FC<Props> = ({
 				tableName,
 			});
 			toast.success(message);
-			setLoading(false)
+			setLoading(false);
 			onClose();
 		} catch (error) {
-			setLoading(false)
+			setLoading(false);
 			toast.error((error as Error).message);
 		}
 	};

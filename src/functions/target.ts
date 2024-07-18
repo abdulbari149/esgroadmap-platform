@@ -3,6 +3,8 @@ import { TableData } from '@/types/function'
 import transformTableData from '@/utils/transform-table-data'
 import { Prisma } from '@prisma/client'
 import prisma from '@/lib/prisma'
+import { cache } from 'react'
+import { TargetTables } from '@/types/target'
 
 export type TargetSentenceData = TableData<
   Prisma.$SentenceAllViewPayload,
@@ -43,7 +45,6 @@ const getSentenceCarbonData = async () => {
       sector_name__1__NAICS_: true,
       upload_date: true,
     },
-    take: 20,
   })
 
   return transformTableData(
@@ -157,23 +158,22 @@ const getSentenceRenewablesData = async () => {
   ) as TargetSentenceData[]
 }
 
-export type TargetTables =
-  | 'carbon_reduction'
-  | 'gender_diversity'
-  | 'waste_&_recycling'
-  | 'supply_chain'
-  | 'water_management'
-  | 'renewables'
-  | 'all_company'
 
-const targets: Record<TargetTables, () => Promise<TargetSentenceData[]>> = {
-  "waste_&_recycling": getSentenceWasteData,
-  carbon_reduction: getSentenceCarbonData,
-  gender_diversity: getSentenceGenderData,
-  renewables: getSentenceRenewablesData,
-  supply_chain: getSentenceSupplierData,
-  water_management: getSentenceWaterData,
-  all_company: getSentenceAllCompanyData,
+const targetSentences: Record<TargetTables, () => Promise<TargetSentenceData[]>> = {
+  "waste_&_recycling": cache(getSentenceWasteData),
+  carbon_reduction: cache(getSentenceCarbonData),
+  gender_diversity: cache(getSentenceGenderData),
+  renewables: cache(getSentenceRenewablesData),
+  supply_chain: cache(getSentenceSupplierData),
+  water_management: cache(getSentenceWaterData),
+  all_company: cache(getSentenceAllCompanyData),
 }
 
-export default targets;
+
+const target =  {
+  get(tableName: TargetTables) {
+    return targetSentences[tableName]();
+  }
+}
+
+export default target;

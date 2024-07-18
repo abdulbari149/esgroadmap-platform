@@ -40,3 +40,4 @@ export type TableData<
   // @ts-ignore
   [key in Columns]: PrismaModel['scalars'][ReversedTColumMap[key]]
 }
+

@@ -54,7 +54,6 @@ const getMultiSelectFilterTemplate = (templateOptions: {
 	const renderComponent: React.ComponentProps<
 		typeof Column
 	>["filterElement"] = (options) => {
-		console.log({ value: options.value });
 
 		return (
 			<MultiSelect

@@ -28,6 +28,6 @@
 		"**/*.tsx",
 		".next/types/**/*.ts",
 		"global.d.ts"
-	],
+, "src/app/(protected)/dashboard/targets/[id]"	],
 	"exclude": ["node_modules"]
 }

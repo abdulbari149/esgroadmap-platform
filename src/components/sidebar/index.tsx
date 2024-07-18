@@ -9,7 +9,7 @@ import {
 import Link from "next/link";
 
 import { X as CloseIcon, Menu as MenuIcon } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Logo from "../logo";
 import Colors from "@/styles/colors";
@@ -28,6 +28,11 @@ const Sidebar: React.FC<{ user: Omit<User, "password" | "deletedAt"> }> = ({
 	const { isLargeDevice, isExtraLargeDevice, isMediumDevice, isSmallDevice } =
 		useMediaQuery();
 	const router = useRouter();
+
+	useEffect(() => {
+		router.refresh();
+	}, [router]);
+
 	const full = !collapsed && isExtraLargeDevice;
 
 	const HeaderIcon = !full ? MenuIcon : CloseIcon;

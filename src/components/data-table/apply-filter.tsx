@@ -9,6 +9,9 @@ import { Column } from "primereact/column";
 import { Dropdown } from "primereact/dropdown";
 import { toast } from "react-toastify";
 import portfolio, { Portfolio } from "@/api/portfolio";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { ThreeDots } from "react-loader-spinner";
+import Colors from "@/styles/colors";
 
 type Props = {
 	tableName: string;
@@ -47,7 +50,6 @@ const ApplyFilterDialog: React.FC<Props> = ({
 		try {
 			setLoading(true);
 			const data = await portfolio.list({ tableName });
-			console.log(data);
 			setFilters(data);
 			setOptions(data.map((i) => ({ label: i.name, value: i.id })));
 			setLoading(false);
@@ -59,7 +61,7 @@ const ApplyFilterDialog: React.FC<Props> = ({
 
 	useEffect(() => {
 		init();
-	}, [init]);
+	}, [init, show]);
 
 	return (
 		<Dialog
@@ -82,6 +84,20 @@ const ApplyFilterDialog: React.FC<Props> = ({
 				onClose();
 			}}
 		>
+			{loading && (
+				<div className="w-[100%] h-[100%] flex items-center justify-center">
+					<ThreeDots
+						visible={true}
+						height="50"
+						width="50"
+						color={Colors.secondary}
+						radius="9"
+						ariaLabel="three-dots-loading"
+						wrapperStyle={{}}
+						wrapperClass=""
+					/>
+				</div>
+			)}
 			{!loading && (
 				<>
 					{" "}

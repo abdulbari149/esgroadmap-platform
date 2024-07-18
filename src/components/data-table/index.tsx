@@ -1,6 +1,7 @@
 "use client";
 import React, { useCallback, useRef, useState } from "react";
 import {
+	DataTableFilterMeta,
 	DataTableFilterMetaData,
 	DataTable as PRDataTable,
 } from "primereact/datatable";
@@ -12,6 +13,9 @@ import { Button } from "primereact/button";
 import { toast } from "react-toastify";
 import SaveFilterDialog from "./save-filter";
 import ApplyFilterDialog from "./apply-filter";
+import { convertArrayToCSV } from "convert-array-to-csv";
+import * as XLSX from "xlsx";
+import convertTargetName from "@/utils/conver-target-name";
 
 type DataTableProps<TRow extends object> = {
 	tableName: string;
@@ -20,41 +24,46 @@ type DataTableProps<TRow extends object> = {
 	filters?: Record<string, FilterMatchMode>;
 };
 
-function DataTable<TRow extends object>(props: DataTableProps<TRow>) {
-	const [loading, setLoading] = useState(false);
-	const dt = useRef<PRDataTable<TRow[]> | null>(null);
-	const [filters, setFilters] = useState<
-		Record<string, DataTableFilterMetaData>
-	>(() => {
-		let tableFilters = {
-			global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-		};
+const convertToFilters = <TRow extends object>(
+	filters: DataTableProps<TRow>["filters"]
+) => {
+	let tableFilters: DataTableFilterMeta = {
+		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+	};
 
-		if (props.filters) {
-			const { filters: propFilters } = props;
-			const dynamicFilters = Object.keys(propFilters).reduce(
-				(prev, current) => {
-					const matchMode = propFilters[current];
-					return {
-						...prev,
-						[current]: { value: null, matchMode },
-					};
-				},
-				{} as Record<string, { value: any; matchMode: FilterMatchMode }>
-			);
+	if (!filters) return tableFilters;
 
-			tableFilters = {
-				...tableFilters,
-				...dynamicFilters,
+	const dynamicFilters: DataTableFilterMeta = Object.keys(filters).reduce(
+		(prev, current) => {
+			const matchMode = filters[current];
+			return {
+				...prev,
+				[current]: { value: null, matchMode },
 			};
-		}
-		return tableFilters;
-	});
+		},
+		{}
+	);
 
+	return {
+		...tableFilters,
+		...dynamicFilters,
+	};
+};
+
+function DataTable<TRow extends object>(props: DataTableProps<TRow>) {
+	const ref = useRef<PRDataTable<TRow[]> | null>(null);
+
+	const [filters, setFilters] = useState(() =>
+		convertToFilters<TRow>(props.filters)
+	);
+	// const filters = convertToFilters(props.filters);
+	const [loading, setLoading] = useState(false);
 	const [showDialogs, setShowDialogs] = useState({
 		save: false,
 		apply: false,
 	});
+	const [data, setData] = useState<TRow[]>(props.data);
+	const [globalFilterValue, setGlobalFilterValue] = useState("");
 
 	const setDialogValue = useCallback(
 		(key: keyof typeof showDialogs, value: boolean) => {
@@ -65,26 +74,29 @@ function DataTable<TRow extends object>(props: DataTableProps<TRow>) {
 		[]
 	);
 
-	const [globalFilterValue, setGlobalFilterValue] = useState("");
+	const onGlobalFilterChange: React.ChangeEventHandler<HTMLInputElement> =
+		useCallback(
+			(e) => {
+				const value = e.target.value;
+				let _filters = { ...filters };
 
-	const onGlobalFilterChange = (e: any) => {
-		const value = e.target.value;
-		let _filters = { ...filters };
-
-		_filters["global"].value = value;
-
-		setFilters(_filters);
-		setGlobalFilterValue(value);
-	};
+				_filters["global"] = {
+					..._filters["global"],
+					value,
+				};
+				setFilters(_filters);
+				setGlobalFilterValue(value);
+			},
+			[filters]
+		);
 
 	const onFilterOptionSelect = useCallback(
 		async (option: string) => {
-			console.log({ filters });
 			if (option === "save") {
 				if (
-					Object.keys(filters).filter(
-						(key) => filters[key as keyof typeof filters].value
-					).length === 0
+					Object.keys(filters).filter((key) => {
+						return "value" in filters[key] ? filters[key].value : false;
+					}).length === 0
 				) {
 					toast.error("Please select some filters first");
 					return;
@@ -97,11 +109,52 @@ function DataTable<TRow extends object>(props: DataTableProps<TRow>) {
 		[filters, setDialogValue]
 	);
 
+	const saveToCSV = async () => {
+		const csvData = convertArrayToCSV(data);
+
+		const blob = new Blob([csvData], { type: "text/csv" });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = `${props.tableName}-${Date.now()}.csv`;
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+		URL.revokeObjectURL(url);
+
+		if (!ref.current) return;
+		return ref.current.exportCSV({ selectionOnly: true });
+	};
+
+	const saveToExcel = async () => {
+		const worksheet = XLSX.utils.json_to_sheet(data);
+		const workbook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(
+			workbook,
+			worksheet,
+			convertTargetName(props.tableName)
+		);
+
+		const excelBuffer = XLSX.write(workbook, {
+			bookType: "xlsx",
+			type: "array",
+		});
+		const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = `${props.tableName}-${Date.now()}.xlsx`;
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+		URL.revokeObjectURL(url);
+	};
+
 	return (
 		<div className="bg-white border border-gray-200 rounded-lg shadow w-100 flex-1">
 			<PRDataTable
 				value={props.data}
-				ref={dt}
+				ref={ref}
 				paginator
 				rows={10}
 				loading={loading}
@@ -114,6 +167,9 @@ function DataTable<TRow extends object>(props: DataTableProps<TRow>) {
 						onGlobalFilterChange={onGlobalFilterChange}
 						onDownloadOptionSelect={async (option) => {
 							if (option === "csv") {
+								await saveToCSV();
+							} else if (option === "excel") {
+								await saveToExcel();
 							}
 						}}
 						onFilterOptionSelect={onFilterOptionSelect}
@@ -133,9 +189,10 @@ function DataTable<TRow extends object>(props: DataTableProps<TRow>) {
 				}}
 				paginatorPosition="bottom"
 				tableStyle={{ minWidth: "50rem" }}
-				onFilter={(event) => {
-					setFilters(event.filters as any);
+				onValueChange={(value) => {
+					setData(value);
 				}}
+				onFilter={(event) => setFilters(event.filters)}
 			>
 				{props.columns.map((col, index) => (
 					<Column
@@ -147,7 +204,10 @@ function DataTable<TRow extends object>(props: DataTableProps<TRow>) {
 				))}
 			</PRDataTable>
 			<SaveFilterDialog
-				filters={filters}
+				filters={
+					ref?.current?.getFilterMeta() ??
+					({} as Record<string, DataTableFilterMetaData>)
+				}
 				onClose={() => setDialogValue("save", false)}
 				show={showDialogs.save}
 				tableName={props.tableName}
@@ -157,7 +217,10 @@ function DataTable<TRow extends object>(props: DataTableProps<TRow>) {
 				show={showDialogs.apply}
 				tableName={props.tableName}
 				applyFilter={(filters) => {
+					console.log(`Applying filters: `, filters);
 					setFilters(filters);
+					// if (!ref.current) return;
+					// ref.current.setFilterMeta(filters);
 				}}
 			/>
 		</div>
