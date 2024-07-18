@@ -8,7 +8,6 @@ import { Stripe } from 'stripe'
 import prisma from '@/lib/prisma'
 import stripe from '@/lib/stripe'
 
-const endpointSecret = env.STRIPE_WEBHOOK_SECRET
 
 const onPaymentSucceed = async (data: Stripe.Invoice) => {
   if (!data.customer_email || !data.customer)
@@ -66,21 +65,25 @@ const onPaymentFailed = async (data: Stripe.Invoice) => {
 
 export const POST = async (req: NextRequest) => {
   try {
-    const sig = headers().get('stripe-signature')
+    const sig = headers().get('stripe-signature') as string;
+    const endpointSecret = env.STRIPE_WEBHOOK_SECRET as string;
 
     if (!sig) throw new Error('Sig not found')
-    // const body = await req.json()
-    const body = await req.json()
-    let event
-    console.log('Signature: ', sig);
-    console.log('Text Body: ', body);
+
+      const body = await req.text()
+    let event: Stripe.Event;
+    console.log('Signature: ', sig)
+    console.log('Text Body: ', body)
     console.log('End point secret', endpointSecret)
-    // console.log('JSON Body: ', JSON.stringify(body, null, 2))
-    // console.log('Text body:', await req.text())
 
     try {
-      event = stripe.webhooks.constructEvent(JSON.stringify(body, null, 2), sig, endpointSecret)
+      event = stripe.webhooks.constructEvent(
+        body,
+        sig,
+        endpointSecret,
+      )
     } catch (err) {
+      console.log(JSON.stringify({ err }, null, 2))
       throw new HttpBadRequestError(`Webhook Error: ${(err as Error).message}`)
     }
 
