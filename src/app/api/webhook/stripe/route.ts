@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Stripe } from 'stripe'
 import prisma from '@/lib/prisma'
 import stripe from '@/lib/stripe'
-
+import { NextApiRequest } from 'next'
 
 const onPaymentSucceed = async (data: Stripe.Invoice) => {
   if (!data.customer_email || !data.customer)
@@ -63,27 +63,39 @@ const onPaymentFailed = async (data: Stripe.Invoice) => {
   // TODO: give an email alert saying the payment has been failed
 }
 
+const buffer = (req: NextApiRequest) => {
+  return new Promise<Buffer>((resolve, reject) => {
+    const chunks: Buffer[] = [];
+
+    req.on("data", (chunk: Buffer) => {
+      chunks.push(chunk);
+    });
+
+    req.on("end", () => {
+      resolve(Buffer.concat(chunks));
+    });
+
+    req.on("error", reject);
+  });
+};
+
 export const POST = async (req: NextRequest) => {
   try {
-    const sig = headers().get('stripe-signature') as string;
-    const endpointSecret = env.STRIPE_WEBHOOK_SECRET as string;
+    const sig = headers().get('stripe-signature') as string
+    const endpointSecret = env.STRIPE_WEBHOOK_SECRET as string
 
     if (!sig) throw new Error('Sig not found')
-
-      const body = await req.text()
-    let event: Stripe.Event;
-    console.log('Signature: ', sig)
-    console.log('Text Body: ', body)
-    console.log('End point secret', endpointSecret)
+    
+    const body = await req.text();
+    let event: Stripe.Event
+    console.log(`Signature: ${sig}`)
+    console.log(`Text Body: ${body}`)
+    console.log(`End point secret ${endpointSecret}`)
 
     try {
-      event = stripe.webhooks.constructEvent(
-        body,
-        sig,
-        endpointSecret,
-      )
+      event = stripe.webhooks.constructEvent(body, sig, endpointSecret)
     } catch (err) {
-      console.log(JSON.stringify({ err }, null, 2))
+      // console.log(JSON.stringify({ err }, null, 2))
       throw new HttpBadRequestError(`Webhook Error: ${(err as Error).message}`)
     }
 
