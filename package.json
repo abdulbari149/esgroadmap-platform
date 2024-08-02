@@ -5,11 +5,11 @@
   "scripts": {
     "dev": "next dev -p 4000",
     "build": "next build",
-    "start": "next start -p 4000",
     "lint": "next lint",
     "prisma:generate": "prisma generate",
     "prisma:pull": "prisma db pull",
     "prisma:push": "prisma db push",
+    "start": "NODE_ENV=production node server.js",
     "prisma:migrate": "prisma migrate dev"
   },
   "dependencies": {
